@@ -14,6 +14,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@apartemen.com',
             'password' => bcrypt('password123'),
             'role' => 'admin',
+            'status' => 'active',
         ]);
 
         // 2. Buat Akun Penghuni
@@ -22,6 +23,15 @@ class UserSeeder extends Seeder
             'email' => 'budi@apartemen.com',
             'password' => bcrypt('password123'),
             'role' => 'penghuni',
+            'status' => 'active',
+        ]);
+
+        User::create([
+            'name'     => 'Administrator',
+            'email'    => 'admin@apartin.com',
+            'password' => bcrypt('admin123'),
+            'role'     => 'admin',
+            'status'   => 'active',
         ]);
     }
 }

@@ -1,21 +1,26 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PenghuniController as AdminPenghuniController;
 use App\Http\Controllers\Admin\TagihanController as AdminTagihanController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Penghuni\TagihanPenghuniController;
 use App\Http\Controllers\Penghuni\PembayaranPenghuniController;
+use App\Http\Controllers\Auth\AuthController;
 
 // === HALAMAN UTAMA ===
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('landing');
 });
 
 // === AUTH ROUTES ===
-Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
-Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // === ROUTE ADMIN ===
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
