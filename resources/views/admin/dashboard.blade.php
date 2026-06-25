@@ -1,98 +1,156 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - ApartIn</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100 min-h-screen">
+@extends('layouts.admin')
 
-    {{-- NAVBAR --}}
-    <nav class="bg-black text-white px-8 py-4 flex items-center justify-between shadow-md">
-        <div class="flex items-center gap-2">
-            <span class="text-yellow-400 text-xl font-black">Apart</span>
-            <span class="text-white text-xl font-black">In</span>
-            <span class="ml-3 text-xs bg-yellow-400 text-black font-bold px-2 py-0.5 rounded">ADMIN</span>
-        </div>
-        <div class="flex items-center gap-4">
-            <span class="text-gray-400 text-sm">{{ auth()->user()->name }}</span>
-            <form method="POST" action="/logout">
-                @csrf
-                <button type="submit" class="text-sm text-red-400 hover:text-red-300 transition">Logout</button>
-            </form>
-        </div>
-    </nav>
-
-    <div class="flex">
-        {{-- SIDEBAR --}}
-        <aside class="w-56 bg-black min-h-screen text-white pt-6 px-4">
-            <ul class="space-y-1">
-                <li>
-                    <a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-yellow-400 text-black font-semibold text-sm">
-                        🏠 Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 text-sm transition">
-                        🏢 Lantai & Unit
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 text-sm transition">
-                        👥 Penghuni
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 text-sm transition">
-                        💳 Tagihan
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 text-sm transition">
-                        🔧 Pengaduan
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        {{-- MAIN CONTENT --}}
-        <main class="flex-1 p-8">
-            <h1 class="text-2xl font-black text-gray-900 mb-1">Dashboard Admin</h1>
-            <p class="text-gray-500 text-sm mb-8">Selamat datang, {{ auth()->user()->name }}!</p>
-
-            {{-- STATS --}}
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
-                <div class="bg-black text-white rounded-2xl p-6">
-                    <p class="text-gray-400 text-xs mb-1">Total Unit</p>
-                    <p class="text-3xl font-black text-yellow-400">0</p>
-                    <p class="text-gray-500 text-xs mt-1">unit terdaftar</p>
+@section('content')
+<div class="py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Statistik Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon indigo">
+                    <i class="fa-solid fa-building"></i>
                 </div>
-                <div class="bg-yellow-400 text-black rounded-2xl p-6">
-                    <p class="text-gray-800 text-xs mb-1">Unit Terisi</p>
-                    <p class="text-3xl font-black">0</p>
-                    <p class="text-gray-700 text-xs mt-1">penghuni aktif</p>
-                </div>
-                <div class="bg-white text-gray-900 rounded-2xl p-6 border border-gray-200">
-                    <p class="text-gray-500 text-xs mb-1">Tagihan Belum Lunas</p>
-                    <p class="text-3xl font-black text-red-500">0</p>
-                    <p class="text-gray-400 text-xs mt-1">perlu diverifikasi</p>
-                </div>
-                <div class="bg-white text-gray-900 rounded-2xl p-6 border border-gray-200">
-                    <p class="text-gray-500 text-xs mb-1">Pengaduan Pending</p>
-                    <p class="text-3xl font-black text-orange-500">0</p>
-                    <p class="text-gray-400 text-xs mt-1">belum ditangani</p>
+                <div class="stat-info">
+                    <p>Total Unit</p>
+                    <h3>{{ $totalUnit }}</h3>
                 </div>
             </div>
 
-            {{-- PLACEHOLDER --}}
-            <div class="bg-white rounded-2xl p-8 border border-gray-200 text-center">
-                <p class="text-4xl mb-3">🚧</p>
-                <p class="text-gray-700 font-semibold">Fitur sedang dikembangkan</p>
-                <p class="text-gray-400 text-sm mt-1">Halaman ini akan diisi oleh anggota tim lainnya.</p>
+            <div class="stat-card">
+                <div class="stat-icon emerald">
+                    <i class="fa-solid fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <p>Unit Terisi</p>
+                    <h3>{{ $unitTerisi }}</h3>
+                </div>
             </div>
-        </main>
+
+            <div class="stat-card">
+                <div class="stat-icon teal">
+                    <i class="fa-solid fa-plus-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <p>Unit Tersedia</p>
+                    <h3>{{ $unitTersedia }}</h3>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon emerald">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-info">
+                    <p>Pendapatan Bulan Ini</p>
+                    <h3 style="font-size: 1.3rem;">Rp {{ number_format($pendapatanBulanIni / 1000000, 1) }}jt</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Approval -->
+        @if($pendingApproval > 0)
+        <div class="alert alert-warning" style="margin-bottom: 28px;">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            <span>
+                Ada <strong>{{ $pendingApproval }} pengguna</strong> menunggu persetujuan.
+                <a href="#approval-section" style="text-decoration: underline; font-weight: 600;">Lihat daftar</a>
+            </span>
+        </div>
+        @endif
+
+        <!-- Laporan Sewa Chart -->
+        <div class="card" style="margin-bottom: 28px;">
+            <div class="card-header">
+                <h2 class="card-title">Laporan Pendapatan Sewa (6 Bulan Terakhir)</h2>
+            </div>
+            <div class="card-body">
+                @if($laporanSewa->count() > 0)
+                <div style="display: flex; align-items: flex-end; gap: 16px; height: 250px;">
+                    @foreach($laporanSewa as $data)
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <div style="width: 100%; background: var(--accent); border-radius: 8px 8px 0 0; height: {{ ($data->total / $laporanSewa->max('total')) * 100 }}%;"></div>
+                        <p style="font-size: 0.75rem; color: var(--text-muted);">{{ \Carbon\Carbon::parse($data->bulan)->format('M Y') }}</p>
+                        <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-primary);">{{ number_format($data->total / 1000000, 1) }}jt</p>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <p style="text-align: center; color: var(--text-muted); padding: 40px 0;">Belum ada data pendapatan</p>
+                @endif
+            </div>
+        </div>
+
+        <!-- Timeline Ketersediaan Unit -->
+        <div class="card" style="margin-bottom: 28px;">
+            <div class="card-header">
+                <h2 class="card-title">Timeline Ketersediaan Unit</h2>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Penghuni</th>
+                            <th>Tanggal Masuk</th>
+                            <th>Tanggal Keluar</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($timeline as $item)
+                        <tr>
+                            <td><strong>{{ $item->unit->nomor ?? '-' }}</strong></td>
+                            <td>{{ $item->user->name ?? '-' }}</td>
+                            <td>{{ $item->tanggal_masuk ? $item->tanggal_masuk->format('d M Y') : '-' }}</td>
+                            <td>{{ $item->tanggal_keluar ? $item->tanggal_keluar->format('d M Y') : 'Belum ditentukan' }}</td>
+                            <td>
+                                <span class="badge badge-{{ $item->status === 'aktif' ? 'aktif' : 'nonaktif' }}">
+                                    {{ ucfirst($item->status) }}
+                                </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 40px 0;">Belum ada data penghuni</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Approval Penghuni -->
+        <div id="approval-section" class="card">
+            <div class="card-header">
+                <h2 class="card-title">Persetujuan Pengguna Baru</h2>
+            </div>
+            <div class="card-body">
+                @forelse($usersNeedApproval as $user)
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                    <div>
+                        <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">{{ $user->name }}</p>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary);">{{ $user->email }}</p>
+                        <p style="font-size: 0.875rem; color: var(--text-muted);">KTP: {{ $user->no_ktp }}</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <form action="{{ route('admin.users.approve', $user->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fa-solid fa-check"></i> Setujui
+                            </button>
+                        </form>
+                        <form action="{{ route('admin.users.reject', $user->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa-solid fa-times"></i> Tolak
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @empty
+                <p style="text-align: center; color: var(--text-muted); padding: 40px 0;">Tidak ada pengguna yang menunggu persetujuan</p>
+                @endforelse
+            </div>
+        </div>
     </div>
-
-</body>
-</html>
+</div>
+@endsection
