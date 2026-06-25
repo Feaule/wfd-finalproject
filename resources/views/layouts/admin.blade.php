@@ -527,7 +527,24 @@
         </div>
 
         <nav class="sidebar-nav">
+            <div class="nav-section-label">Dashboard</div>
+            <a href="{{ route('admin.dashboard') }}"
+               class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+                Dashboard
+            </a>
+
             <div class="nav-section-label">Manajemen</div>
+            <a href="{{ route('admin.lantai.index') }}"
+               class="nav-link {{ request()->routeIs('admin.lantai.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span>
+                Data Lantai
+            </a>
+            <a href="{{ route('admin.unit.index') }}"
+               class="nav-link {{ request()->routeIs('admin.unit.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-building"></i></span>
+                Data Unit
+            </a>
             <a href="{{ route('admin.penghuni.index') }}"
                class="nav-link {{ request()->routeIs('admin.penghuni.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-users"></i></span>

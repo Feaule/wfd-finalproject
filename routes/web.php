@@ -26,9 +26,17 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
 
     // Dashboard
-    Route::get('/', function () {
-        return redirect()->route('admin.penghuni.index');
-    })->name('dashboard');
+    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    // Approval Penghuni
+    Route::post('/users/{id}/approve', [\App\Http\Controllers\Admin\DashboardController::class, 'approveUser'])->name('users.approve');
+    Route::post('/users/{id}/reject', [\App\Http\Controllers\Admin\DashboardController::class, 'rejectUser'])->name('users.reject');
+
+    // CRUD Lantai
+    Route::resource('lantai', \App\Http\Controllers\Admin\LantaiController::class);
+    
+    // CRUD Unit
+    Route::resource('unit', \App\Http\Controllers\Admin\UnitController::class);
 
     // CRUD Penghuni
     Route::resource('penghuni', AdminPenghuniController::class);

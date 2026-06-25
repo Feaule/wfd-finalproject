@@ -11,4 +11,9 @@ class Lantai extends Model
     protected $fillable = [
         'nomor_lantai', 'nama'
     ];
+
+    public function units()
+    {
+        return $this->hasMany(Unit::class);
+    }
 }
