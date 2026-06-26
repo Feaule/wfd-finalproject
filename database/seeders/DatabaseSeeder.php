@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             PenghuniSeeder::class,
             PengaduanSeeder::class,
             TagihanSeeder::class,
+            HistoricPenghuniSeeder::class,
         ]);
     }
 }
