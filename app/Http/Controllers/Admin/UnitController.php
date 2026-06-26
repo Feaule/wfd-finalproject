@@ -80,6 +80,10 @@ class UnitController extends Controller
 
     public function destroy(Unit $unit)
     {
+        if ($unit->status === 'terisi' || $unit->penghuni()->count() > 0) {
+            return redirect()->route('admin.unit.index')->with('error', 'Unit tidak dapat dihapus karena berstatus terisi atau memiliki riwayat penghuni.');
+        }
+
         if ($unit->foto) {
             Storage::disk('public')->delete($unit->foto);
         }

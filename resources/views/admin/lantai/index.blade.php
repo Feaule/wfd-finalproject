@@ -70,14 +70,20 @@
                             <a href="{{ route('admin.lantai.edit', $item) }}" class="btn btn-sm btn-secondary" title="Edit">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <form action="{{ route('admin.lantai.destroy', $item) }}" method="POST"
-                                  onsubmit="return confirm('Yakin hapus lantai {{ $item->nomor_lantai }}?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                            @if($item->units_count > 0)
+                                <button type="button" class="btn btn-sm" style="background: var(--text-muted); color: white; cursor: not-allowed; opacity: 0.6; border: none;" title="Lantai tidak bisa dihapus karena masih ada unit">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-                            </form>
+                            @else
+                                <form action="{{ route('admin.lantai.destroy', $item) }}" method="POST"
+                                      onsubmit="return confirm('Yakin hapus lantai {{ $item->nomor_lantai }}?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </td>
                 </tr>

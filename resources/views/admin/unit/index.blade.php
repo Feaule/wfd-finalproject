@@ -94,14 +94,20 @@
                         <a href="{{ route('admin.unit.edit', $unit) }}" class="btn btn-sm btn-secondary" title="Edit">
                             <i class="fa-solid fa-pen"></i>
                         </a>
-                        <form action="{{ route('admin.unit.destroy', $unit) }}" method="POST"
-                              onsubmit="return confirm('Yakin hapus unit {{ $unit->nomor }}?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                        @if($unit->status === 'terisi' || $unit->penghuni()->count() > 0)
+                            <button type="button" class="btn btn-sm" style="background: var(--text-muted); color: white; cursor: not-allowed; opacity: 0.6; border: none;" title="Unit tidak bisa dihapus karena sedang terisi atau memiliki riwayat penghuni">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
-                        </form>
+                        @else
+                            <form action="{{ route('admin.unit.destroy', $unit) }}" method="POST"
+                                  onsubmit="return confirm('Yakin hapus unit {{ $unit->nomor }}?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>

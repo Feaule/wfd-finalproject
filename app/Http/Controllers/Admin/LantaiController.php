@@ -48,6 +48,10 @@ class LantaiController extends Controller
 
     public function destroy(Lantai $lantai)
     {
+        if ($lantai->units()->count() > 0) {
+            return redirect()->route('admin.lantai.index')->with('error', 'Lantai tidak dapat dihapus karena masih memiliki unit.');
+        }
+
         $lantai->delete();
         return redirect()->route('admin.lantai.index')->with('success', 'Lantai berhasil dihapus');
     }
