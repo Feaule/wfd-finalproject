@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal Penghuni - Sistem Manajemen Apartemen">
-    <title>@yield('title', 'Portal Penghuni') | ApartemenApp</title>
+    <title>@yield('title', 'Portal Penghuni') | ApartIn</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -272,6 +272,84 @@
         select.form-control option { background: var(--bg-card); }
         .form-error { font-size: 0.75rem; color: var(--rose); margin-top: 5px; }
         .form-text  { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
+
+        /* ===== TABLE ===== */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            padding: 14px 18px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 16px 18px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td { border-bottom: none; }
+
+        tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        tbody tr:hover td {
+            color: var(--text-primary);
+        }
+
+        /* ===== STAT CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .stat-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+
+        .stat-icon {
+            width: 50px; height: 50px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.teal   { background: var(--teal-light); color: var(--teal); }
+        .stat-icon.emerald{ background: var(--emerald-light); color: var(--emerald); }
+        .stat-icon.amber  { background: var(--amber-light); color: var(--amber); }
+        .stat-icon.rose   { background: var(--rose-light); color: var(--rose); }
+
+        .stat-info p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-info h3 { font-size: 1.8rem; font-weight: 800; color: var(--text-primary); line-height: 1; margin-top: 4px; }
     </style>
     @stack('styles')
 </head>
@@ -279,9 +357,9 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-brand">
-            <div class="brand-logo"><i class="fa-solid fa-building" style="color:white"></i></div>
+            <div class="brand-logo"><i class="fa-solid fa-building-columns" style="color:white"></i></div>
             <div class="brand-text">
-                <h1>ApartemenApp</h1>
+                <h1>ApartIn</h1>
                 <p>Portal Penghuni</p>
             </div>
         </div>

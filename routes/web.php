@@ -38,6 +38,12 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     // CRUD Unit
     Route::resource('unit', \App\Http\Controllers\Admin\UnitController::class);
 
+    // Permohonan Unit (approve / reject penghuni menunggu)
+    Route::post('penghuni/{penghuni}/approve-permohonan', [\App\Http\Controllers\Admin\PenghuniController::class, 'approvePermohonan'])
+         ->name('penghuni.approve-permohonan');
+    Route::post('penghuni/{penghuni}/reject-permohonan', [\App\Http\Controllers\Admin\PenghuniController::class, 'rejectPermohonan'])
+         ->name('penghuni.reject-permohonan');
+
     // CRUD Penghuni
     Route::resource('penghuni', AdminPenghuniController::class);
 
@@ -57,6 +63,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('tagihan', AdminTagihanController::class);
 
     // Verifikasi Pembayaran
+    Route::get('pembayaran', [AdminPembayaranController::class, 'index'])
+         ->name('pembayaran.index');
     Route::post('pembayaran/{pembayaran}/verifikasi', [AdminPembayaranController::class, 'verifikasi'])
          ->name('pembayaran.verifikasi');
     Route::post('pembayaran/{pembayaran}/tolak', [AdminPembayaranController::class, 'tolak'])
@@ -70,9 +78,13 @@ Route::prefix('penghuni')->middleware(['auth', 'role:penghuni'])->name('penghuni
     Route::get('/', [\App\Http\Controllers\Penghuni\DashboardPenghuniController::class, 'index'])
          ->name('dashboard');
 
-    // Info Unit
+    // Info Unit & Pengajuan
     Route::get('/unit', [\App\Http\Controllers\Penghuni\UnitPenghuniController::class, 'index'])
          ->name('unit');
+    Route::post('/unit/{unit}/ajukan', [\App\Http\Controllers\Penghuni\UnitPenghuniController::class, 'ajukan'])
+         ->name('unit.ajukan');
+    Route::post('/unit/batalkan', [\App\Http\Controllers\Penghuni\UnitPenghuniController::class, 'batalkan'])
+         ->name('unit.batalkan');
 
     // Lihat Tagihan
     Route::get('tagihan', [TagihanPenghuniController::class, 'index'])
