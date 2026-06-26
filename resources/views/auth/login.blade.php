@@ -208,6 +208,13 @@
             <p>Masuk ke sistem manajemen apartemen</p>
         </div>
 
+        @if(session('success'))
+            <div class="alert-success" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.4); color: #10B981; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-circle-check"></i>
+                {{ session('success') }}
+            </div>
+        @endif
+
         @if($errors->any())
             <div class="alert-danger">
                 <i class="fa-solid fa-circle-xmark"></i>
