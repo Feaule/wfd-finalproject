@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Panel Admin - Sistem Manajemen Apartemen">
-    <title>@yield('title', 'Dashboard') | Admin Apartemen</title>
+    <title>@yield('title', 'Dashboard') | Admin ApartIn</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -515,7 +515,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <h1><i class="fa-solid fa-building-columns"></i> ApartemenApp</h1>
+            <h1><i class="fa-solid fa-building-columns"></i> ApartIn</h1>
             <p>Panel Administrator</p>
         </div>
 
@@ -567,6 +567,11 @@
                class="nav-link {{ request()->routeIs('admin.tagihan.generate.form') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-bolt"></i></span>
                 Generate Tagihan
+            </a>
+            <a href="{{ route('admin.pembayaran.index') }}"
+               class="nav-link {{ request()->routeIs('admin.pembayaran.index') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-receipt"></i></span>
+                Verifikasi Pembayaran
             </a>
         </nav>
 

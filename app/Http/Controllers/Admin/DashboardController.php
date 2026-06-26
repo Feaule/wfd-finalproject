@@ -7,6 +7,7 @@ use App\Models\Unit;
 use App\Models\Penghuni;
 use App\Models\User;
 use App\Models\Pembayaran;
+use App\Models\Pengaduan;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -56,6 +57,30 @@ class DashboardController extends Controller
             ->latest()
             ->take(5)
             ->get();
+
+        // Pengaduan pending
+        $pengaduanPendingCount = Pengaduan::where('status', 'pending')->count();
+        $pengaduanPending = Pengaduan::with(['penghuni.user', 'penghuni.unit'])
+            ->where('status', 'pending')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // Permohonan unit menunggu
+        $permohonanUnitCount = Penghuni::where('status', 'menunggu')->count();
+        $permohonan = Penghuni::with(['unit.lantai', 'user'])
+            ->where('status', 'menunggu')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // Pembayaran menunggu verifikasi
+        $pembayaranPendingCount = Pembayaran::whereNull('verified_at')->count();
+        $pembayaranPending = Pembayaran::with(['tagihan.penghuni.user', 'tagihan.penghuni.unit'])
+            ->whereNull('verified_at')
+            ->latest()
+            ->take(5)
+            ->get();
         
         return view('admin.dashboard', compact(
             'totalUnit',
@@ -65,7 +90,13 @@ class DashboardController extends Controller
             'pendingApproval',
             'laporanSewa',
             'timeline',
-            'usersNeedApproval'
+            'usersNeedApproval',
+            'pengaduanPendingCount',
+            'pengaduanPending',
+            'permohonanUnitCount',
+            'permohonan',
+            'pembayaranPendingCount',
+            'pembayaranPending'
         ));
     }
 

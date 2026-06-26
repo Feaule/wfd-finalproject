@@ -16,7 +16,14 @@ class PenghuniController extends Controller
      */
    public function index(Request $request)
 {
-    $query = Penghuni::with(['user', 'unit']);
+    // Permohonan menunggu approve (selalu tampilkan di atas)
+    $permohonan = Penghuni::with(['user', 'unit.lantai'])
+        ->where('status', 'menunggu')
+        ->latest()
+        ->get();
+
+    $query = Penghuni::with(['user', 'unit'])
+        ->where('status', '!=', 'menunggu');
 
     // Search by name or email
     if ($request->filled('search')) {
@@ -33,7 +40,7 @@ class PenghuniController extends Controller
     }
 
     $penghuni = $query->latest()->paginate(10)->withQueryString();
-    return view('admin.penghuni.index', compact('penghuni'));
+    return view('admin.penghuni.index', compact('penghuni', 'permohonan'));
 }
 
 
@@ -64,7 +71,7 @@ class PenghuniController extends Controller
     ]);
 
     DB::transaction(function () use ($validated) {
-        Penghuni::create($validated);
+        Penghuni::create(array_merge($validated, ['status' => 'aktif']));
         // Update status unit menjadi terisi
         Unit::find($validated['unit_id'])->update(['status' => 'terisi']);
     });
@@ -127,12 +134,51 @@ public function update(Request $request, Penghuni $penghuni)
     public function destroy(Penghuni $penghuni)
 {
     DB::transaction(function () use ($penghuni) {
-        // Bebaskan unit
-        Unit::find($penghuni->unit_id)->update(['status' => 'tersedia']);
+        // Bebaskan unit hanya jika penghuni aktif (bukan sekedar menunggu)
+        if ($penghuni->status === 'aktif' && $penghuni->unit_id) {
+            Unit::find($penghuni->unit_id)->update(['status' => 'tersedia']);
+        }
         $penghuni->delete();
     });
     return redirect()->route('admin.penghuni.index')
         ->with('success', 'Data penghuni berhasil dihapus.');
 }
+
+    /**
+     * Approve permohonan unit dari penghuni (status: menunggu -> aktif)
+     */
+    public function approvePermohonan(Penghuni $penghuni)
+    {
+        if ($penghuni->status !== 'menunggu') {
+            return redirect()->route('admin.penghuni.index')
+                ->with('error', 'Permohonan ini tidak dalam status menunggu.');
+        }
+
+        DB::transaction(function () use ($penghuni) {
+            $penghuni->update(['status' => 'aktif']);
+            // Tandai unit sebagai terisi
+            Unit::find($penghuni->unit_id)->update(['status' => 'terisi']);
+        });
+
+        return redirect()->route('admin.penghuni.index')
+            ->with('success', 'Permohonan penghuni ' . $penghuni->user->name . ' disetujui.');
+    }
+
+    /**
+     * Reject permohonan unit dari penghuni (hapus record)
+     */
+    public function rejectPermohonan(Penghuni $penghuni)
+    {
+        if ($penghuni->status !== 'menunggu') {
+            return redirect()->route('admin.penghuni.index')
+                ->with('error', 'Permohonan ini tidak dalam status menunggu.');
+        }
+
+        $nama = $penghuni->user->name ?? 'Penghuni';
+        $penghuni->delete();
+
+        return redirect()->route('admin.penghuni.index')
+            ->with('warning', 'Permohonan ' . $nama . ' telah ditolak.');
+    }
 
 }

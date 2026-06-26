@@ -9,6 +9,7 @@ class Penghuni extends Model
 
     protected $fillable = [
         'user_id', 'unit_id', 'tanggal_masuk', 'tanggal_keluar', 'status'
+        // status: aktif | tidak_aktif | menunggu
     ];
 
     protected $casts = [
