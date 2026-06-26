@@ -14,11 +14,25 @@ class PenghuniController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index()
+   public function index(Request $request)
 {
-    $penghuni = Penghuni::with(['user', 'unit'])
-        ->latest()
-        ->paginate(10);
+    $query = Penghuni::with(['user', 'unit']);
+
+    // Search by name or email
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->whereHas('user', function($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
+    }
+
+    // Filter by status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    $penghuni = $query->latest()->paginate(10)->withQueryString();
     return view('admin.penghuni.index', compact('penghuni'));
 }
 

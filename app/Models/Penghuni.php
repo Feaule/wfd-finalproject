@@ -27,4 +27,8 @@ class Penghuni extends Model
     public function tagihan() {
         return $this->hasMany(Tagihan::class);
     }
+
+    public function pengaduan() {
+        return $this->hasMany(Pengaduan::class);
+    }
 }
