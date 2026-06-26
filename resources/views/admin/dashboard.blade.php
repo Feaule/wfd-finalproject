@@ -3,77 +3,74 @@
 @section('content')
 <div class="py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Statistik Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon indigo">
-                    <i class="fa-solid fa-building"></i>
-                </div>
-                <div class="stat-info">
-                    <p>Total Unit</p>
-                    <h3>{{ $totalUnit }}</h3>
+        <!-- Hero Banner: Pendapatan -->
+        <div style="background: linear-gradient(135deg, var(--emerald) 0%, var(--teal) 100%); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 12px 24px -8px rgba(16,185,129,0.4); position: relative; overflow: hidden;">
+            <!-- Dekorasi background -->
+            <div style="position: absolute; right: -5%; top: -20%; opacity: 0.1; transform: rotate(-15deg);">
+                <i class="fa-solid fa-chart-line" style="font-size: 12rem; color: #fff;"></i>
+            </div>
+            
+            <div style="color: #fff; position: relative; z-index: 1;">
+                <p style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; opacity: 0.9;">Pendapatan Bulan Ini</p>
+                <h2 style="font-size: 2.4rem; font-weight: 800; margin: 0; line-height: 1.2;">
+                    Rp {{ number_format($pendapatanBulanIni / 1000000, 1) }}<span style="font-size: 1.2rem; opacity: 0.8; margin-left: 4px;">Juta</span>
+                </h2>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); position: relative; z-index: 1;">
+                <i class="fa-solid fa-wallet" style="font-size: 2rem; color: #fff;"></i>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 mb-8">
+            
+            <!-- Grup: Data Unit & Finansial -->
+            <div class="flex-1 lg:border-r border-[var(--border)] lg:pr-8">
+                <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; letter-spacing: 0.5px;">
+                    <i class="fa-solid fa-chart-pie" style="margin-right: 6px;"></i> Ringkasan Utama
+                </h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                    <!-- Card 1 -->
+                    <div class="stat-card" style="padding: 16px; background: linear-gradient(145deg, var(--bg-card) 0%, rgba(99,102,241,0.05) 100%); border-color: rgba(99,102,241,0.2);">
+                        <div class="stat-icon" style="background: rgba(99,102,241,0.15); width: 44px; height: 44px; font-size: 1.1rem; color: var(--accent);"><i class="fa-solid fa-building"></i></div>
+                        <div class="stat-info"><p style="font-size: 0.8rem;">Total Unit</p><h3 style="font-size: 1.3rem;">{{ $totalUnit }}</h3></div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="stat-card" style="padding: 16px; background: linear-gradient(145deg, var(--bg-card) 0%, rgba(16,185,129,0.05) 100%); border-color: rgba(16,185,129,0.2);">
+                        <div class="stat-icon" style="background: rgba(16,185,129,0.15); width: 44px; height: 44px; font-size: 1.1rem; color: var(--emerald);"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="stat-info"><p style="font-size: 0.8rem;">Unit Terisi</p><h3 style="font-size: 1.3rem;">{{ $unitTerisi }}</h3></div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="stat-card" style="padding: 16px; background: linear-gradient(145deg, var(--bg-card) 0%, rgba(20,184,166,0.05) 100%); border-color: rgba(20,184,166,0.2);">
+                        <div class="stat-icon" style="background: rgba(20,184,166,0.15); width: 44px; height: 44px; font-size: 1.1rem; color: var(--teal);"><i class="fa-solid fa-plus-circle"></i></div>
+                        <div class="stat-info"><p style="font-size: 0.8rem;">Unit Tersedia</p><h3 style="font-size: 1.3rem;">{{ $unitTersedia }}</h3></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon emerald">
-                    <i class="fa-solid fa-check-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <p>Unit Terisi</p>
-                    <h3>{{ $unitTerisi }}</h3>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon teal">
-                    <i class="fa-solid fa-plus-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <p>Unit Tersedia</p>
-                    <h3>{{ $unitTersedia }}</h3>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon emerald">
-                    <i class="fa-solid fa-money-bill-wave"></i>
-                </div>
-                <div class="stat-info">
-                    <p>Pendapatan Bulan Ini</p>
-                    <h3 style="font-size: 1.3rem;">Rp {{ number_format($pendapatanBulanIni / 1000000, 1) }}jt</h3>
+            <!-- Grup: Tugas & Alert Pending -->
+            <div class="flex-1">
+                <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; letter-spacing: 0.5px;">
+                    <i class="fa-solid fa-bell" style="margin-right: 6px;"></i> Tugas Pending
+                </h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                    <!-- Alert 1 -->
+                    <div class="stat-card" style="padding: 16px; background: linear-gradient(145deg, var(--bg-card) 0%, rgba(244,63,94,0.05) 100%); border-color: rgba(244,63,94,0.2);">
+                        <div class="stat-icon" style="background: rgba(244,63,94,0.15); width: 44px; height: 44px; font-size: 1.1rem; color: var(--rose);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="stat-info"><p style="font-size: 0.8rem;">Pengaduan</p><h3 style="font-size: 1.3rem; color: var(--rose);">{{ $pengaduanPendingCount }}</h3></div>
+                    </div>
+                    <!-- Alert 2 -->
+                    <div class="stat-card" style="padding: 16px; background: linear-gradient(145deg, var(--bg-card) 0%, rgba(245,158,11,0.05) 100%); border-color: rgba(245,158,11,0.2);">
+                        <div class="stat-icon" style="background: rgba(245,158,11,0.15); width: 44px; height: 44px; font-size: 1.1rem; color: var(--amber);"><i class="fa-solid fa-door-open"></i></div>
+                        <div class="stat-info"><p style="font-size: 0.8rem;">Permohonan Unit</p><h3 style="font-size: 1.3rem; color: var(--amber);">{{ $permohonanUnitCount }}</h3></div>
+                    </div>
+                    <!-- Alert 3 -->
+                    <div class="stat-card" style="padding: 16px; background: linear-gradient(145deg, var(--bg-card) 0%, rgba(20,184,166,0.05) 100%); border-color: rgba(20,184,166,0.2);">
+                        <div class="stat-icon" style="background: rgba(20,184,166,0.15); width: 44px; height: 44px; font-size: 1.1rem; color: var(--teal);"><i class="fa-solid fa-receipt"></i></div>
+                        <div class="stat-info"><p style="font-size: 0.8rem;">Verifikasi Bayar</p><h3 style="font-size: 1.3rem; color: var(--teal);">{{ $pembayaranPendingCount }}</h3></div>
+                    </div>
                 </div>
             </div>
-
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(239,68,68,0.12);">
-                    <i class="fa-solid fa-triangle-exclamation" style="color: var(--rose);"></i>
-                </div>
-                <div class="stat-info">
-                    <p>Pengaduan Pending</p>
-                    <h3 style="color: var(--rose);">{{ $pengaduanPendingCount }}</h3>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(245,158,11,0.12);">
-                    <i class="fa-solid fa-door-open" style="color: var(--amber);"></i>
-                </div>
-                <div class="stat-info">
-                    <p>Permohonan Unit</p>
-                    <h3 style="color: var(--amber);">{{ $permohonanUnitCount }}</h3>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(20,184,166,0.12);">
-                    <i class="fa-solid fa-receipt" style="color: var(--teal);"></i>
-                </div>
-                <div class="stat-info">
-                    <p>Verifikasi Pembayaran</p>
-                    <h3 style="color: var(--teal);">{{ $pembayaranPendingCount }}</h3>
-                </div>
-            </div>
+            
         </div>
 
         <!-- Pending Approval -->
