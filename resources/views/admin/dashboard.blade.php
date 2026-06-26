@@ -104,27 +104,79 @@
         </div>
         @endif
 
-        <!-- Laporan Sewa Chart -->
-        <div class="card" style="margin-bottom: 28px;">
-            <div class="card-header">
-                <h2 class="card-title">Laporan Pendapatan Sewa (6 Bulan Terakhir)</h2>
-            </div>
-            <div class="card-body">
-                @if($laporanSewa->count() > 0)
-                <div style="display: flex; align-items: flex-end; gap: 16px; height: 250px;">
-                    @foreach($laporanSewa as $data)
-                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                        <div style="width: 100%; background: var(--accent); border-radius: 8px 8px 0 0; height: {{ ($data->total / $laporanSewa->max('total')) * 100 }}%;"></div>
-                        <p style="font-size: 0.75rem; color: var(--text-muted);">{{ \Carbon\Carbon::parse($data->bulan)->format('M Y') }}</p>
-                        <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-primary);">{{ number_format($data->total / 1000000, 1) }}jt</p>
-                    </div>
-                    @endforeach
-                </div>
-                @else
-                <p style="text-align: center; color: var(--text-muted); padding: 40px 0;">Belum ada data pendapatan</p>
-                @endif
-            </div>
+    <!-- Laporan Sewa Chart -->
+    <div class="card" style="margin-bottom: 28px;">
+        <div class="card-header">
+            <h2 class="card-title">Laporan Pendapatan Sewa (6 Bulan Terakhir)</h2>
         </div>
+        <div class="card-body">
+            @if($laporanSewa->count() > 0)
+
+            {{-- Tambahkan total di atas chart --}}
+            @php $totalSewa = $laporanSewa->sum('total'); @endphp
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <p style="font-size:0.8rem;color:var(--text-muted);margin:0">Total 6 bulan terakhir</p>
+                <p style="font-size:1.2rem;font-weight:700;color:var(--text-primary);margin:0">
+                    Rp {{ number_format($totalSewa / 1000000, 1) }} jt
+                </p>
+            </div>
+
+            {{-- Canvas Chart.js --}}
+            <div style="position:relative;width:100%;height:260px;">
+                <canvas id="chartSewa"
+                    role="img"
+                    aria-label="Bar chart pendapatan sewa 6 bulan terakhir">
+                    Total pendapatan: Rp {{ number_format($totalSewa, 0, ',', '.') }}
+                </canvas>
+            </div>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+            <script>
+            new Chart(document.getElementById('chartSewa'), {
+                type: 'bar',
+                data: {
+                    labels: @json($laporanSewa->map(fn($d) => \Carbon\Carbon::parse($d->bulan . '-01')->translatedFormat('M Y'))),
+                    datasets: [{
+                        label: 'Pendapatan sewa',
+                        data: @json($laporanSewa->pluck('total')->map(fn($v) => (float)$v)),
+                        backgroundColor: '#2a78d6',
+                        borderRadius: { topLeft: 4, topRight: 4 },
+                        borderSkipped: 'bottom',
+                        maxBarThickness: 48,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => 'Rp ' + (ctx.raw / 1000000).toFixed(1) + ' jt'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { font: { size: 12 }, autoSkip: false, maxRotation: 0 },
+                            grid: { display: false }
+                        },
+                        y: {
+                            ticks: {
+                                font: { size: 12 },
+                                callback: v => 'Rp ' + (v / 1000000).toFixed(0) + 'jt'
+                            }
+                        }
+                    }
+                }
+            });
+            </script>
+
+            @else
+            <p style="text-align:center;color:var(--text-muted);padding:40px 0">Belum ada data pendapatan</p>
+            @endif
+        </div>
+    </div>
 
         <!-- Timeline Ketersediaan Unit -->
         <div class="card" style="margin-bottom: 28px;">
