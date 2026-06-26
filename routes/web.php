@@ -41,6 +41,14 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     // CRUD Penghuni
     Route::resource('penghuni', AdminPenghuniController::class);
 
+    // Pengaduan
+    Route::get('pengaduan', [\App\Http\Controllers\Admin\PengaduanController::class, 'index'])
+         ->name('pengaduan.index');
+    Route::get('pengaduan/{pengaduan}', [\App\Http\Controllers\Admin\PengaduanController::class, 'show'])
+         ->name('pengaduan.show');
+    Route::put('pengaduan/{pengaduan}', [\App\Http\Controllers\Admin\PengaduanController::class, 'update'])
+         ->name('pengaduan.update');
+
     // CRUD Tagihan + Generate
     Route::get('tagihan/generate', [AdminTagihanController::class, 'showGenerate'])
          ->name('tagihan.generate.form');
@@ -59,9 +67,12 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
 Route::prefix('penghuni')->middleware(['auth', 'role:penghuni'])->name('penghuni.')->group(function () {
 
     // Dashboard
-    Route::get('/', function () {
-        return redirect()->route('penghuni.tagihan.index');
-    })->name('dashboard');
+    Route::get('/', [\App\Http\Controllers\Penghuni\DashboardPenghuniController::class, 'index'])
+         ->name('dashboard');
+
+    // Info Unit
+    Route::get('/unit', [\App\Http\Controllers\Penghuni\UnitPenghuniController::class, 'index'])
+         ->name('unit');
 
     // Lihat Tagihan
     Route::get('tagihan', [TagihanPenghuniController::class, 'index'])
@@ -72,5 +83,9 @@ Route::prefix('penghuni')->middleware(['auth', 'role:penghuni'])->name('penghuni
          ->name('pembayaran.create');
     Route::post('tagihan/{tagihan}/bayar', [PembayaranPenghuniController::class, 'store'])
          ->name('pembayaran.store');
+
+    // Pengaduan
+    Route::resource('pengaduan', \App\Http\Controllers\Penghuni\PengaduanPenghuniController::class)
+         ->only(['index', 'create', 'store', 'show', 'destroy']);
 });
 

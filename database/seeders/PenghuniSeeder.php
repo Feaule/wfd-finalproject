@@ -25,20 +25,28 @@ class PenghuniSeeder extends Seeder
             'role' => 'penghuni',
         ]);
 
-        // 2. Buat data Lantai dummy terlebih dahulu agar 'lantai_id' tidak error
-        $lantai = Lantai::firstOrCreate(
-            ['id' => 1],
-            ['nomor_lantai' => 1, 'nama' => 'Lantai Dasar']
+        // 2. Buat data Lantai
+        $lantai1 = Lantai::firstOrCreate(
+            ['nomor_lantai' => 1],
+            ['nama' => 'Ground Floor']
+        );
+        $lantai2 = Lantai::firstOrCreate(
+            ['nomor_lantai' => 2],
+            ['nama' => 'Second Floor']
+        );
+        $lantai3 = Lantai::firstOrCreate(
+            ['nomor_lantai' => 3],
+            ['nama' => 'Third Floor']
         );
 
-        // 3. Buat unit dummy jika belum ada (lantai_id kini sudah aman)
+        // 3. Buat unit apartemen
         $unit = Unit::firstOrCreate(
-            ['nomor' => '101'],
+            ['nomor' => '201'],
             [
-                'lantai_id' => $lantai->id, 
-                'tipe' => 'studio', 
-                'luas_m2' => 25,
-                'harga_sewa' => 2500000, 
+                'lantai_id' => $lantai2->id,
+                'tipe' => '1BR',
+                'luas_m2' => 36,
+                'harga_sewa' => 4500000,
                 'status' => 'terisi'
             ]
         );

@@ -52,7 +52,7 @@ class AuthController extends Controller
             // Redirect sesuai role
             return auth()->user()->role === 'admin'
                 ? redirect()->route('admin.dashboard')
-                : redirect()->route('penghuni.tagihan.index');
+                : redirect()->route('penghuni.dashboard');
         }
 
         return back()->withErrors(['email' => 'Email atau password salah.']);
