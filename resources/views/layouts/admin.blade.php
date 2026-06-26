@@ -551,6 +551,11 @@
                 <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
                 Data Penghuni
             </a>
+            <a href="{{ route('admin.pengaduan.index') }}"
+               class="nav-link {{ request()->routeIs('admin.pengaduan.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-headset"></i></span>
+                Pengaduan
+            </a>
 
             <div class="nav-section-label">Keuangan</div>
             <a href="{{ route('admin.tagihan.index') }}"

@@ -35,6 +35,32 @@
     </div>
 </div>
 
+<div class="card" style="margin-bottom:20px">
+    <div class="card-body" style="padding:20px 24px">
+        <form method="GET" action="{{ route('admin.penghuni.index') }}" class="filter-bar">
+            <div class="form-group">
+                <label class="form-label" style="font-size:0.75rem">Cari Penghuni</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email..."
+                    class="form-control" style="min-width:250px">
+            </div>
+            <div class="form-group">
+                <label class="form-label" style="font-size:0.75rem">Status</label>
+                <select name="status" class="form-control" style="min-width:150px">
+                    <option value="">Semua Status</option>
+                    <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="tidak_aktif" {{ request('status') == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                </select>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-end">
+                <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-search"></i> Filter</button>
+                @if(request('search') || request('status'))
+                    <a href="{{ route('admin.penghuni.index') }}" class="btn btn-secondary btn-sm"><i class="fa-solid fa-rotate-right"></i> Reset</a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-header">
         <h2 class="card-title"><i class="fa-solid fa-users" style="color:var(--accent)"></i> Daftar Penghuni</h2>
@@ -67,7 +93,7 @@
                         @endif
                     </td>
                     <td>{{ $p->tanggal_masuk->format('d M Y') }}</td>
-                    <td>{{ $p->tanggal_keluar ? $p->tanggal_keluar->format('d M Y') : '<span style="color:var(--text-muted)">-</span>' }}</td>
+                    <td>{!! $p->tanggal_keluar ? $p->tanggal_keluar->format('d M Y') : '<span style="color:var(--text-muted)">-</span>' !!}</td>
                     <td>
                         @if($p->status === 'aktif')
                             <span class="badge badge-aktif"><i class="fa-solid fa-circle" style="font-size:0.5rem"></i> Aktif</span>
@@ -106,7 +132,7 @@
         <div style="font-size:0.8rem;color:var(--text-muted)">
             Menampilkan {{ $penghuni->firstItem() }}–{{ $penghuni->lastItem() }} dari {{ $penghuni->total() }} data
         </div>
-        {{ $penghuni->links() }}
+        {{ $penghuni->appends(request()->query())->links() }}
     </div>
     @endif
 </div>

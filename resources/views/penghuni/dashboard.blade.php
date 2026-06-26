@@ -1,103 +1,120 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Penghuni - ApartIn</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    @stack('styles')
-</head>
-<body class="bg-gray-100 min-h-screen">
+@extends('layouts.penghuni')
 
-    {{-- NAVBAR --}}
-    <nav class="bg-black text-white px-8 py-4 flex items-center justify-between shadow-md">
-        <div class="flex items-center gap-2">
-            <span class="text-yellow-400 text-xl font-black">Apart</span>
-            <span class="text-white text-xl font-black">In</span>
-            <span class="ml-3 text-xs bg-white text-black font-bold px-2 py-0.5 rounded">PENGHUNI</span>
+@section('title', 'Dashboard Penghuni')
+
+@section('content')
+<div style="margin-bottom:32px">
+    <h1 style="font-size:1.75rem;font-weight:800;color:var(--text-primary);margin-bottom:8px">
+        <i class="fa-solid fa-gauge-high" style="color:var(--teal)"></i> Dashboard Penghuni
+    </h1>
+    <p style="font-size:0.9rem;color:var(--text-secondary)">
+        Selamat datang, <strong style="color:var(--teal)">{{ auth()->user()->name }}</strong>!
+    </p>
+</div>
+
+<!-- STATS CARDS -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-bottom:32px">
+    <!-- Unit Info -->
+    <div class="card">
+        <div class="card-body">
+            <div style="display:flex;align-items:center;gap:14px">
+                <div style="width:52px;height:52px;background:var(--teal-light);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center">
+                    <i class="fa-solid fa-building" style="font-size:1.5rem;color:var(--teal)"></i>
+                </div>
+                <div style="flex:1">
+                    <p style="font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;margin-bottom:4px">Unit Saya</p>
+                    @if($penghuni && $penghuni->unit)
+                        <h3 style="font-size:1.5rem;font-weight:800;color:var(--teal);margin:0">Unit {{ $penghuni->unit->nomor }}</h3>
+                        <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px">Lantai {{ $penghuni->unit->lantai->nomor }} • {{ ucfirst($penghuni->unit->tipe) }}</p>
+                    @else
+                        <h3 style="font-size:1.2rem;font-weight:700;color:var(--text-muted);margin:0">Belum Terdaftar</h3>
+                        <p style="font-size:0.75rem;color:var(--rose);margin-top:2px">Hubungi admin</p>
+                    @endif
+                </div>
+            </div>
         </div>
-        <div class="flex items-center gap-4">
-            <span class="text-gray-400 text-sm">{{ auth()->user()->name }}</span>
-            <form method="POST" action="/logout">
-                @csrf
-                <button type="submit" class="text-sm text-red-400 hover:text-red-300 transition">Logout</button>
-            </form>
-        </div>
-    </nav>
-
-    <div class="flex">
-        {{-- SIDEBAR --}}
-        <aside class="w-56 bg-black min-h-screen text-white pt-6 px-4">
-            <ul class="space-y-1">
-                <li>
-                    <a href="/penghuni/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-yellow-400 text-black font-semibold text-sm">
-                        🏠 Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 text-sm transition">
-                        🏢 Unit Saya
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 text-sm transition">
-                        💳 Tagihan
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 text-sm transition">
-                        🔧 Pengaduan
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        {{-- MAIN CONTENT --}}
-        <main class="flex-1 p-8">
-            <h1 class="text-2xl font-black text-gray-900 mb-1">Dashboard Penghuni</h1>
-            <p class="text-gray-500 text-sm mb-8">Selamat datang, {{ auth()->user()->name }}!</p>
-
-            {{-- INFO CARDS --}}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-                <div class="bg-black text-white rounded-2xl p-6">
-                    <p class="text-gray-400 text-xs mb-1">Unit Kamu</p>
-                    <p class="text-xl font-black text-yellow-400">Belum ada</p>
-                    <p class="text-gray-500 text-xs mt-1">hubungi admin</p>
-                </div>
-                <div class="bg-white rounded-2xl p-6 border border-gray-200">
-                    <p class="text-gray-500 text-xs mb-1">Tagihan Bulan Ini</p>
-                    <p class="text-xl font-black text-gray-900">Rp 0</p>
-                    <p class="text-gray-400 text-xs mt-1">belum ada tagihan</p>
-                </div>
-                <div class="bg-white rounded-2xl p-6 border border-gray-200">
-                    <p class="text-gray-500 text-xs mb-1">Pengaduan Aktif</p>
-                    <p class="text-xl font-black text-orange-500">0</p>
-                    <p class="text-gray-400 text-xs mt-1">sedang diproses</p>
-                </div>
-            </div>
-
-            {{-- STATUS AKUN --}}
-            <div class="bg-yellow-50 border border-yellow-300 rounded-2xl p-6 mb-6">
-                <div class="flex items-start gap-3">
-                    <span class="text-2xl">✅</span>
-                    <div>
-                        <p class="font-bold text-yellow-800">Akun Kamu Sudah Aktif</p>
-                        <p class="text-yellow-700 text-sm mt-1">Kamu sudah bisa menggunakan semua fitur ApartIn. Fitur lengkap sedang dikembangkan oleh tim.</p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- PLACEHOLDER --}}
-            <div class="bg-white rounded-2xl p-8 border border-gray-200 text-center">
-                <p class="text-4xl mb-3">🚧</p>
-                <p class="text-gray-700 font-semibold">Fitur sedang dikembangkan</p>
-                <p class="text-gray-400 text-sm mt-1">Halaman ini akan diisi oleh anggota tim lainnya.</p>
-            </div>
-        </main>
     </div>
 
-</body>
-</html>
+    <!-- Tagihan -->
+    <div class="card">
+        <div class="card-body">
+            <div style="display:flex;align-items:center;gap:14px">
+                <div style="width:52px;height:52px;background:var(--amber-light);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center">
+                    <i class="fa-solid fa-file-invoice-dollar" style="font-size:1.5rem;color:var(--amber)"></i>
+                </div>
+                <div style="flex:1">
+                    <p style="font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;margin-bottom:4px">Tagihan Belum Bayar</p>
+                    <h3 style="font-size:1.5rem;font-weight:800;color:var(--amber);margin:0">{{ $stats['belum_bayar'] ?? 0 }}</h3>
+                    <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px">Total {{ $stats['total_tagihan'] ?? 0 }} tagihan</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pengaduan -->
+    <div class="card">
+        <div class="card-body">
+            <div style="display:flex;align-items:center;gap:14px">
+                <div style="width:52px;height:52px;background:var(--accent-light);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center">
+                    <i class="fa-solid fa-screwdriver-wrench" style="font-size:1.5rem;color:var(--accent)"></i>
+                </div>
+                <div style="flex:1">
+                    <p style="font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;margin-bottom:4px">Pengaduan Aktif</p>
+                    <h3 style="font-size:1.5rem;font-weight:800;color:var(--accent);margin:0">{{ $stats['pengaduan_aktif'] ?? 0 }}</h3>
+                    <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px">Dalam proses</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- QUICK ACTIONS -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:32px">
+    <a href="{{ route('penghuni.unit') }}" class="card" style="text-decoration:none;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div class="card-body" style="text-align:center;padding:28px 20px">
+            <i class="fa-solid fa-door-open" style="font-size:2rem;color:var(--teal);margin-bottom:12px"></i>
+            <h4 style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin:0 0 6px 0">Info Unit Saya</h4>
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin:0">Detail lengkap unit Anda</p>
+        </div>
+    </a>
+
+    <a href="{{ route('penghuni.tagihan.index') }}" class="card" style="text-decoration:none;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div class="card-body" style="text-align:center;padding:28px 20px">
+            <i class="fa-solid fa-receipt" style="font-size:2rem;color:var(--amber);margin-bottom:12px"></i>
+            <h4 style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin:0 0 6px 0">Tagihan & Pembayaran</h4>
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin:0">Lihat dan bayar tagihan</p>
+        </div>
+    </a>
+
+    <a href="{{ route('penghuni.pengaduan.index') }}" class="card" style="text-decoration:none;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div class="card-body" style="text-align:center;padding:28px 20px">
+            <i class="fa-solid fa-headset" style="font-size:2rem;color:var(--accent);margin-bottom:12px"></i>
+            <h4 style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin:0 0 6px 0">Pengaduan</h4>
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin:0">Buat & pantau pengaduan</p>
+        </div>
+    </a>
+</div>
+
+<!-- INFO STATUS -->
+@if(!$penghuni || !$penghuni->unit)
+<div style="background:var(--rose-light);border:1px solid var(--rose);border-radius:var(--radius);padding:20px;margin-bottom:24px">
+    <div style="display:flex;align-items:start;gap:14px">
+        <i class="fa-solid fa-circle-exclamation" style="font-size:1.5rem;color:var(--rose)"></i>
+        <div>
+            <h4 style="font-size:1rem;font-weight:700;color:var(--rose);margin:0 0 6px 0">Akun Belum Terhubung dengan Unit</h4>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0">Silakan hubungi admin untuk mendaftarkan Anda ke unit apartemen.</p>
+        </div>
+    </div>
+</div>
+@else
+<div style="background:var(--emerald-light);border:1px solid var(--emerald);border-radius:var(--radius);padding:20px">
+    <div style="display:flex;align-items:start;gap:14px">
+        <i class="fa-solid fa-circle-check" style="font-size:1.5rem;color:var(--emerald)"></i>
+        <div>
+            <h4 style="font-size:1rem;font-weight:700;color:var(--emerald);margin:0 0 6px 0">Akun Anda Sudah Aktif</h4>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0">Anda dapat menggunakan semua fitur yang tersedia. Gunakan menu di atas untuk navigasi.</p>
+        </div>
+    </div>
+</div>
+@endif
+@endsection

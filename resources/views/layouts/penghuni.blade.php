@@ -287,10 +287,25 @@
         </div>
 
         <div class="navbar-nav">
+            <a href="{{ route('penghuni.dashboard') }}"
+               class="nav-item {{ request()->routeIs('penghuni.dashboard') ? 'active' : '' }}">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+            <a href="{{ route('penghuni.unit') }}"
+               class="nav-item {{ request()->routeIs('penghuni.unit') ? 'active' : '' }}">
+                <i class="fa-solid fa-door-open"></i>
+                Unit Saya
+            </a>
             <a href="{{ route('penghuni.tagihan.index') }}"
-               class="nav-item {{ request()->routeIs('penghuni.tagihan.*') ? 'active' : '' }}">
+               class="nav-item {{ request()->routeIs('penghuni.tagihan.*') || request()->routeIs('penghuni.pembayaran.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
-                Tagihan Saya
+                Tagihan
+            </a>
+            <a href="{{ route('penghuni.pengaduan.index') }}"
+               class="nav-item {{ request()->routeIs('penghuni.pengaduan.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-headset"></i>
+                Pengaduan
             </a>
         </div>
 
