@@ -1,23 +1,60 @@
 @extends('layouts.admin')
 
+@push('styles')
+<style>
+    /* ===== ADMIN DASHBOARD RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        /* Hero banner stack */
+        .hero-banner-inner {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 16px !important;
+        }
+        .hero-banner-amount {
+            font-size: 1.8rem !important;
+        }
+        /* Approval item actions */
+        .approval-actions {
+            flex-direction: column !important;
+            gap: 6px !important;
+        }
+        /* Pending items */
+        .pending-item {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
+        }
+        .pending-item-actions {
+            align-self: flex-end;
+        }
+    }
+    @media (max-width: 480px) {
+        .hero-banner-amount {
+            font-size: 1.5rem !important;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Hero Banner: Pendapatan -->
-        <div style="background: linear-gradient(135deg, var(--emerald) 0%, var(--teal) 100%); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 12px 24px -8px rgba(16,185,129,0.4); position: relative; overflow: hidden;">
+        <div style="background: linear-gradient(135deg, var(--emerald) 0%, var(--teal) 100%); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 28px; box-shadow: 0 12px 24px -8px rgba(16,185,129,0.4); position: relative; overflow: hidden;">
             <!-- Dekorasi background -->
             <div style="position: absolute; right: -5%; top: -20%; opacity: 0.1; transform: rotate(-15deg);">
                 <i class="fa-solid fa-chart-line" style="font-size: 12rem; color: #fff;"></i>
             </div>
-            
-            <div style="color: #fff; position: relative; z-index: 1;">
-                <p style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; opacity: 0.9;">Pendapatan Bulan Ini</p>
-                <h2 style="font-size: 2.4rem; font-weight: 800; margin: 0; line-height: 1.2;">
-                    Rp {{ number_format($pendapatanBulanIni / 1000000, 1) }}<span style="font-size: 1.2rem; opacity: 0.8; margin-left: 4px;">Juta</span>
-                </h2>
-            </div>
-            <div style="background: rgba(255,255,255,0.2); width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); position: relative; z-index: 1;">
-                <i class="fa-solid fa-wallet" style="font-size: 2rem; color: #fff;"></i>
+            <div class="hero-banner-inner" style="display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1;">
+                <div style="color: #fff;">
+                    <p style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; opacity: 0.9;">Pendapatan Bulan Ini</p>
+                    <h2 class="hero-banner-amount" style="font-size: 2.4rem; font-weight: 800; margin: 0; line-height: 1.2; color:#fff;">
+                        Rp {{ number_format($pendapatanBulanIni / 1000000, 1) }}<span style="font-size: 1.2rem; opacity: 0.8; margin-left: 4px;">Juta</span>
+                    </h2>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); flex-shrink:0;">
+                    <i class="fa-solid fa-wallet" style="font-size: 2rem; color: #fff;"></i>
+                </div>
             </div>
         </div>
 

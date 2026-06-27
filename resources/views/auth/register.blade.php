@@ -219,6 +219,13 @@
         .back-link a:hover {
             color: #14B8A6;
         }
+
+        @media (max-width: 480px) {
+            body { align-items: flex-start; padding: 20px 16px; }
+            .register-card { padding: 32px 20px; border-radius: 16px; }
+            .register-header h1 { font-size: 1.4rem; }
+            .register-logo { width: 54px; height: 54px; font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>

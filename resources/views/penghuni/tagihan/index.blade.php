@@ -2,6 +2,43 @@
 
 @section('title', 'Tagihan Saya')
 
+@push('styles')
+<style>
+    @media (max-width: 640px) {
+        .tagihan-item-row {
+            flex-wrap: wrap !important;
+            padding: 14px 16px !important;
+            gap: 10px !important;
+        }
+        .tagihan-item-amount {
+            min-width: auto !important;
+            text-align: left !important;
+            width: 100%;
+        }
+        .tagihan-item-action {
+            min-width: auto !important;
+            text-align: left !important;
+            width: 100%;
+        }
+        .tagihan-month-total {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 6px !important;
+            padding: 14px 16px !important;
+        }
+        .filter-form {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+        .filter-form input,
+        .filter-form button,
+        .filter-form a {
+            width: 100%;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 <div style="margin-bottom:28px">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px">
@@ -133,7 +170,7 @@
     @endphp
 
     @foreach($items as $item)
-    <div style="display:flex;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid var(--border);transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+    <div class="tagihan-item-row" style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid var(--border);transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
 
         {{-- Ikon jenis --}}
         <div style="width:42px;height:42px;border-radius:10px;background:{{ $bgMap[$item->jenis] }};display:flex;align-items:center;justify-content:center;font-size:1rem;color:{{ $colorMap[$item->jenis] }};flex-shrink:0">
@@ -141,7 +178,7 @@
         </div>
 
         {{-- Info --}}
-        <div style="flex:1">
+        <div style="flex:1;min-width:0">
             <div style="font-weight:600;color:var(--text-primary)">{{ ucfirst($item->jenis) }}</div>
             <div style="font-size:0.78rem;color:var(--text-muted)">
                 Jatuh tempo: {{ $item->jatuh_tempo->format('d M Y') }}
@@ -152,12 +189,12 @@
         </div>
 
         {{-- Jumlah --}}
-        <div style="font-size:1.1rem;font-weight:700;color:var(--text-primary);min-width:140px;text-align:right">
+        <div class="tagihan-item-amount" style="font-size:1.1rem;font-weight:700;color:var(--text-primary);min-width:130px;text-align:right;flex-shrink:0">
             Rp {{ number_format($item->jumlah, 0, ',', '.') }}
         </div>
 
         {{-- Status + Aksi --}}
-        <div style="min-width:160px;text-align:right">
+        <div class="tagihan-item-action" style="min-width:150px;text-align:right;flex-shrink:0">
             @if($item->status === 'belum_bayar')
                 <div>
                     <span class="badge badge-belum" style="margin-bottom:8px"><i class="fa-solid fa-clock"></i> Belum Bayar</span>
@@ -190,9 +227,9 @@
     @endforeach
 
     {{-- Total bulan --}}
-    <div style="padding:16px 24px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center">
+    <div class="tagihan-month-total" style="padding:14px 20px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center">
         <span style="font-size:0.8rem;color:var(--text-muted)">Total Tagihan Bulan Ini</span>
-        <span style="font-size:1.15rem;font-weight:800;color:var(--text-primary)">Rp {{ number_format($totalBulanIni, 0, ',', '.') }}</span>
+        <span style="font-size:1.1rem;font-weight:800;color:var(--text-primary)">Rp {{ number_format($totalBulanIni, 0, ',', '.') }}</span>
     </div>
 </div>
 @empty

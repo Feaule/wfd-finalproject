@@ -274,13 +274,39 @@
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 3rem; }
+            .feature-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
+            .hero h1 { font-size: 2.2rem; letter-spacing: -0.5px; }
             .hero p { font-size: 1rem; }
-            .section-title { font-size: 2rem; }
-            .feature-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 1.8rem; }
+            .feature-grid { grid-template-columns: 1fr; gap: 20px; }
             .nav-buttons { gap: 8px; }
-            .btn { padding: 8px 16px; font-size: 0.85rem; }
+            .btn { padding: 9px 18px; font-size: 0.85rem; }
+            .cta-card { padding: 40px 24px; }
+            .cta h2 { font-size: 1.8rem; }
+            .hero { padding: 40px 20px; }
+            .features { padding: 20px 20px 60px; }
+            .bg-blob-1 { width: 350px; height: 350px; }
+            .bg-blob-2 { width: 300px; height: 300px; }
+            .bg-blob-3 { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.8rem; }
+            .hero { padding: 30px 16px; }
+            .hero p { font-size: 0.95rem; }
+            .section-title { font-size: 1.5rem; margin-bottom: 30px; }
+            .features { padding: 20px 16px 50px; }
+            .cta { padding: 40px 16px; }
+            .cta-card { padding: 30px 20px; border-radius: 20px; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .hero-buttons .btn { width: 100%; max-width: 260px; justify-content: center; }
+            .navbar-container { padding: 0 16px; }
+            .brand-text { font-size: 1.1rem; }
         }
     </style>
 </head>

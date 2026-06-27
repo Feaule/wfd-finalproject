@@ -59,8 +59,8 @@
             flex-direction: column;
             position: fixed;
             top: 0; left: 0;
-            z-index: 100;
-            transition: transform 0.3s ease;
+            z-index: 200;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar-brand {
@@ -206,6 +206,23 @@
             color: white;
         }
 
+        /* ===== SIDEBAR OVERLAY (mobile) ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 199;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         /* ===== MAIN CONTENT ===== */
         .main-content {
             margin-left: var(--sidebar-w);
@@ -213,6 +230,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
 
         .topbar {
@@ -222,33 +240,69 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 32px;
+            padding: 0 24px;
             position: sticky;
             top: 0;
             z-index: 50;
+            gap: 12px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        /* Hamburger button */
+        .btn-hamburger {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 38px; height: 38px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .btn-hamburger:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: var(--accent);
         }
 
         .topbar-title {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .topbar-breadcrumb {
             font-size: 0.75rem;
             color: var(--text-muted);
             margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .topbar-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            flex-shrink: 0;
         }
 
         .content-wrapper {
             flex: 1;
-            padding: 32px;
+            padding: 24px;
         }
 
         /* ===== ALERTS ===== */
@@ -283,12 +337,13 @@
         }
 
         .card-header {
-            padding: 20px 24px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .card-title {
@@ -298,35 +353,35 @@
         }
 
         .card-body {
-            padding: 24px;
+            padding: 20px;
         }
 
         /* ===== STAT CARDS ===== */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 22px 24px;
+            padding: 18px 20px;
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 14px;
             transition: border-color 0.2s, transform 0.2s;
         }
 
         .stat-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
 
         .stat-icon {
-            width: 50px; height: 50px;
+            width: 46px; height: 46px;
             border-radius: var(--radius-sm);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             flex-shrink: 0;
         }
 
@@ -336,21 +391,23 @@
         .stat-icon.amber  { background: var(--amber-light); color: var(--amber); }
         .stat-icon.rose   { background: var(--rose-light); color: var(--rose); }
 
-        .stat-info p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-info h3 { font-size: 1.8rem; font-weight: 800; color: var(--text-primary); line-height: 1; margin-top: 4px; }
+        .stat-info p { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-info h3 { font-size: 1.6rem; font-weight: 800; color: var(--text-primary); line-height: 1; margin-top: 4px; }
 
         /* ===== TABLE ===== */
         .table-wrapper {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 500px;
         }
 
         thead th {
-            padding: 13px 18px;
+            padding: 13px 16px;
             font-size: 0.72rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -363,7 +420,7 @@
         }
 
         tbody td {
-            padding: 14px 18px;
+            padding: 13px 16px;
             font-size: 0.875rem;
             color: var(--text-secondary);
             border-bottom: 1px solid var(--border);
@@ -403,7 +460,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 9px 18px;
+            padding: 9px 16px;
             border-radius: var(--radius-sm);
             font-size: 0.82rem;
             font-weight: 600;
@@ -470,27 +527,29 @@
         /* ===== FILTERS ===== */
         .filter-bar {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
             align-items: flex-end;
         }
 
         .filter-bar .form-group { margin-bottom: 0; }
-        .filter-bar .form-control { min-width: 180px; }
+        .filter-bar .form-control { min-width: 140px; }
 
         /* ===== PAGINATION ===== */
         .pagination-wrapper {
-            padding: 16px 24px;
+            padding: 14px 20px;
             border-top: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .pagination-wrapper .pagination { display: flex; gap: 6px; list-style: none; }
         .pagination .page-item .page-link {
             display: flex; align-items: center; justify-content: center;
-            width: 36px; height: 36px;
+            width: 34px; height: 34px;
             border-radius: var(--radius-sm);
             background: rgba(255,255,255,0.05);
             color: var(--text-secondary);
@@ -504,16 +563,97 @@
         .pagination .page-item .page-link:hover { background: var(--accent-light); color: var(--accent); }
 
         /* ===== RESPONSIVE ===== */
+        /* Tablet */
+        @media (max-width: 1024px) {
+            .content-wrapper { padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Mobile */
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .main-content { margin-left: 0; }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .btn-hamburger {
+                display: flex;
+            }
+
+            .content-wrapper {
+                padding: 16px;
+            }
+
+            .topbar {
+                padding: 0 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .stat-info h3 { font-size: 1.3rem; }
+
+            .card-header {
+                padding: 14px 16px;
+            }
+
+            .card-body {
+                padding: 16px;
+            }
+
+            .filter-bar .form-control {
+                min-width: 100%;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .filter-bar .form-group {
+                width: 100%;
+            }
+
+            .pagination-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .btn-group-action {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+
+        /* Very small mobile */
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar-title { font-size: 0.95rem; }
+            .topbar-breadcrumb { display: none; }
+
+            .stat-card { padding: 14px 16px; }
         }
     </style>
     @stack('styles')
 </head>
 <body>
+    <!-- SIDEBAR OVERLAY (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <h1><i class="fa-solid fa-building-columns"></i> ApartIn</h1>
             <p>Panel Administrator</p>
@@ -530,46 +670,54 @@
         <nav class="sidebar-nav">
             <div class="nav-section-label">Dashboard</div>
             <a href="{{ route('admin.dashboard') }}"
-               class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+               class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
+               onclick="closeSidebar()">
                 <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
                 Dashboard
             </a>
 
             <div class="nav-section-label">Manajemen</div>
             <a href="{{ route('admin.lantai.index') }}"
-               class="nav-link {{ request()->routeIs('admin.lantai.*') ? 'active' : '' }}">
+               class="nav-link {{ request()->routeIs('admin.lantai.*') ? 'active' : '' }}"
+               onclick="closeSidebar()">
                 <span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span>
                 Data Lantai
             </a>
             <a href="{{ route('admin.unit.index') }}"
-               class="nav-link {{ request()->routeIs('admin.unit.*') ? 'active' : '' }}">
+               class="nav-link {{ request()->routeIs('admin.unit.*') ? 'active' : '' }}"
+               onclick="closeSidebar()">
                 <span class="nav-icon"><i class="fa-solid fa-building"></i></span>
                 Data Unit
             </a>
             <a href="{{ route('admin.penghuni.index') }}"
-               class="nav-link {{ request()->routeIs('admin.penghuni.*') ? 'active' : '' }}">
+               class="nav-link {{ request()->routeIs('admin.penghuni.*') ? 'active' : '' }}"
+               onclick="closeSidebar()">
                 <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
                 Data Penghuni
             </a>
             <a href="{{ route('admin.pengaduan.index') }}"
-               class="nav-link {{ request()->routeIs('admin.pengaduan.*') ? 'active' : '' }}">
+               class="nav-link {{ request()->routeIs('admin.pengaduan.*') ? 'active' : '' }}"
+               onclick="closeSidebar()">
                 <span class="nav-icon"><i class="fa-solid fa-headset"></i></span>
                 Pengaduan
             </a>
 
             <div class="nav-section-label">Keuangan</div>
             <a href="{{ route('admin.tagihan.index') }}"
-               class="nav-link {{ request()->routeIs('admin.tagihan.index') ? 'active' : '' }}">
+               class="nav-link {{ request()->routeIs('admin.tagihan.index') ? 'active' : '' }}"
+               onclick="closeSidebar()">
                 <span class="nav-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
                 Daftar Tagihan
             </a>
             <a href="{{ route('admin.tagihan.generate.form') }}"
-               class="nav-link {{ request()->routeIs('admin.tagihan.generate.form') ? 'active' : '' }}">
+               class="nav-link {{ request()->routeIs('admin.tagihan.generate.form') ? 'active' : '' }}"
+               onclick="closeSidebar()">
                 <span class="nav-icon"><i class="fa-solid fa-bolt"></i></span>
                 Generate Tagihan
             </a>
             <a href="{{ route('admin.pembayaran.index') }}"
-               class="nav-link {{ request()->routeIs('admin.pembayaran.index') ? 'active' : '' }}">
+               class="nav-link {{ request()->routeIs('admin.pembayaran.index') ? 'active' : '' }}"
+               onclick="closeSidebar()">
                 <span class="nav-icon"><i class="fa-solid fa-receipt"></i></span>
                 Verifikasi Pembayaran
             </a>
@@ -589,9 +737,14 @@
     <!-- MAIN CONTENT -->
     <div class="main-content">
         <header class="topbar">
-            <div>
-                <div class="topbar-title">@yield('page-title', 'Dashboard')</div>
-                <div class="topbar-breadcrumb">@yield('breadcrumb', 'Admin / Dashboard')</div>
+            <div class="topbar-left">
+                <button class="btn-hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div>
+                    <div class="topbar-title">@yield('page-title', 'Dashboard')</div>
+                    <div class="topbar-breadcrumb">@yield('breadcrumb', 'Admin / Dashboard')</div>
+                </div>
             </div>
             <div class="topbar-actions">
                 @yield('topbar-actions')
@@ -627,6 +780,36 @@
             @yield('content')
         </div>
     </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isOpen = sidebar.classList.contains('open');
+            if (isOpen) {
+                closeSidebar();
+            } else {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close sidebar on resize if going to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeSidebar();
+            }
+        });
+    </script>
 
     @stack('scripts')
 </body>

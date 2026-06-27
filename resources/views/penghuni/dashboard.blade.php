@@ -2,9 +2,38 @@
 
 @section('title', 'Dashboard Penghuni')
 
+@push('styles')
+<style>
+    @media (max-width: 768px) {
+        .tagihan-row {
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+        }
+        .tagihan-amount {
+            min-width: auto !important;
+            text-align: left !important;
+        }
+        .penghuni-hero-title {
+            font-size: 1.3rem !important;
+        }
+        .quick-actions-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+    @media (max-width: 480px) {
+        .quick-actions-grid {
+            grid-template-columns: 1fr 1fr !important;
+        }
+        .penghuni-hero-title {
+            font-size: 1.2rem !important;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
-<div style="margin-bottom:32px">
-    <h1 style="font-size:1.75rem;font-weight:800;color:var(--text-primary);margin-bottom:8px">
+<div style="margin-bottom:24px">
+    <h1 class="penghuni-hero-title" style="font-size:1.75rem;font-weight:800;color:var(--text-primary);margin-bottom:8px">
         <i class="fa-solid fa-gauge-high" style="color:var(--teal)"></i> Dashboard Penghuni
     </h1>
     <p style="font-size:0.9rem;color:var(--text-secondary)">
@@ -161,11 +190,11 @@
         $bgMap    = ['sewa'=>'var(--accent-light)','listrik'=>'var(--amber-light)','air'=>'var(--teal-light)','kebersihan'=>'var(--emerald-light)'];
     @endphp
     @foreach($tagihanTerbaru as $t)
-    <div style="display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--border)">
+    <div class="tagihan-row" style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--border)">
         <div style="width:40px;height:40px;border-radius:10px;background:{{ $bgMap[$t->jenis] }};display:flex;align-items:center;justify-content:center;flex-shrink:0">
             <i class="fa-solid {{ $iconMap[$t->jenis] }}" style="color:{{ $colorMap[$t->jenis] }}"></i>
         </div>
-        <div style="flex:1">
+        <div style="flex:1;min-width:0">
             <div style="font-weight:600;color:var(--text-primary)">{{ ucfirst($t->jenis) }}</div>
             <div style="font-size:0.78rem;color:var(--text-muted)">
                 {{ \Carbon\Carbon::parse($t->bulan . '-01')->translatedFormat('F Y') }}
@@ -175,10 +204,10 @@
                 @endif
             </div>
         </div>
-        <div style="font-weight:700;color:var(--text-primary);min-width:130px;text-align:right">
+        <div class="tagihan-amount" style="font-weight:700;color:var(--text-primary);min-width:120px;text-align:right;flex-shrink:0">
             Rp {{ number_format($t->jumlah, 0, ',', '.') }}
         </div>
-        <div>
+        <div style="flex-shrink:0">
             @if($t->status === 'belum_bayar')
                 <a href="{{ route('penghuni.pembayaran.create', $t->id) }}" class="btn btn-primary btn-sm">
                     <i class="fa-solid fa-upload"></i> Bayar
@@ -210,7 +239,7 @@
 @endif
 
 {{-- QUICK ACTIONS --}}
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px">
+<div class="quick-actions-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px">
     <a href="{{ route('penghuni.unit') }}" class="card" style="text-decoration:none;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
         <div class="card-body" style="text-align:center;padding:24px 16px">
             <i class="fa-solid fa-door-open" style="font-size:1.8rem;color:var(--teal);margin-bottom:10px"></i>

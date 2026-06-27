@@ -192,6 +192,59 @@
         }
 
         .login-footer strong { color: #64748B; }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 10px;
+            color: #64748B;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.05);
+            color: #94A3B8;
+        }
+
+        .btn-back-home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 11px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            color: #94A3B8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            margin-top: 12px;
+        }
+
+        .btn-back-home:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.15);
+            color: #F1F5F9;
+        }
+
+        @media (max-width: 480px) {
+            body { align-items: flex-start; padding: 20px 16px; }
+            .login-card { padding: 32px 24px; border-radius: 16px; }
+            .login-header h1 { font-size: 1.4rem; }
+            .login-logo { width: 54px; height: 54px; font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>
@@ -256,6 +309,10 @@
         <div class="login-footer">
             Sistem Manajemen Apartemen &copy; {{ date('Y') }}
         </div>
+
+        <a href="/" class="btn-back-home">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+        </a>
     </div>
 </body>
 </html>
