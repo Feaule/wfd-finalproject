@@ -415,3 +415,146 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+// ============================================================
+//  ApartIn — Admin Dashboard Fetch API
+//  Semua request ini dapat dilihat di:
+//  DevTools → Network → Fetch/XHR
+// ============================================================
+
+const API = {
+    stats:         '/api/admin/stats',
+    notifications: '/api/admin/notifications',
+    chart:         '/api/admin/chart',
+};
+
+const HEADERS = {
+    'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+};
+
+// ── Utility ──────────────────────────────────────────────────
+function formatRupiah(num) {
+    return 'Rp ' + Number(num).toLocaleString('id-ID');
+}
+
+function updateBadge(id, value, color) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.textContent = value;
+        if (color) el.style.color = `var(--${color})`;
+    }
+}
+
+// ── 1. Fetch Stats ───────────────────────────────────────────
+async function fetchAdminStats() {
+    try {
+        const res  = await fetch(API.stats, { headers: HEADERS });
+        const json = await res.json();
+
+        console.group('%c📊 [API] Admin Stats', 'color:#14B8A6;font-weight:bold');
+        console.log('Status :', json.status);
+        console.log('Timestamp:', json.timestamp);
+        console.table({
+            'Total Unit'     : json.data.unit.total,
+            'Unit Terisi'    : json.data.unit.terisi,
+            'Unit Tersedia'  : json.data.unit.tersedia,
+            'Okupansi (%)'   : json.data.unit.okupansi,
+            'Pendapatan'     : json.data.pendapatan.formatted,
+            'Pengaduan Pending'  : json.data.pending.pengaduan,
+            'Permohonan Pending' : json.data.pending.permohonan,
+            'Pembayaran Pending' : json.data.pending.pembayaran,
+        });
+        console.groupEnd();
+
+        // Update live badge di sidebar jika ada
+        updateBadge('api-live-ocupancy', json.data.unit.okupansi + '%', 'teal');
+        updateBadge('api-live-pendapatan', json.data.pendapatan.formatted, 'emerald');
+
+    } catch (err) {
+        console.error('%c❌ [API] Stats Error:', 'color:red', err.message);
+    }
+}
+
+// ── 2. Fetch Notifications ───────────────────────────────────
+async function fetchAdminNotifications() {
+    try {
+        const res  = await fetch(API.notifications, { headers: HEADERS });
+        const json = await res.json();
+
+        console.group('%c🔔 [API] Admin Notifications', 'color:#F59E0B;font-weight:bold');
+        console.log('Status  :', json.status);
+        console.log('Total   :', json.data.total, 'item pending');
+        console.log('Timestamp:', json.timestamp);
+        if (json.data.notifications.length > 0) {
+            console.table(json.data.notifications.map(n => ({
+                'Type'    : n.type,
+                'Title'   : n.title,
+                'Subtitle': n.subtitle,
+                'Time'    : n.time,
+            })));
+        } else {
+            console.log('✅ Tidak ada notifikasi pending.');
+        }
+        console.groupEnd();
+
+        // Update notif badge di topbar
+        const badge = document.getElementById('api-notif-badge');
+        if (badge && json.data.total > 0) {
+            badge.textContent = json.data.total;
+            badge.style.display = 'inline-flex';
+        }
+
+    } catch (err) {
+        console.error('%c❌ [API] Notifications Error:', 'color:red', err.message);
+    }
+}
+
+// ── 3. Fetch Chart Data ──────────────────────────────────────
+async function fetchAdminChart() {
+    try {
+        const res  = await fetch(API.chart, { headers: HEADERS });
+        const json = await res.json();
+
+        console.group('%c📈 [API] Admin Chart Data — Pendapatan 6 Bulan', 'color:#6366F1;font-weight:bold');
+        console.log('Status  :', json.status);
+        console.log('Periode :', json.data.period);
+        console.log('Total   :', formatRupiah(json.data.total_period));
+        console.log('Timestamp:', json.timestamp);
+
+        const tableData = {};
+        json.data.labels.forEach((label, i) => {
+            tableData[label] = {
+                'Pendapatan'  : formatRupiah(json.data.pendapatan[i]),
+                'Transaksi'   : json.data.transaksi[i] + 'x',
+            };
+        });
+        console.table(tableData);
+        console.groupEnd();
+
+    } catch (err) {
+        console.error('%c❌ [API] Chart Error:', 'color:red', err.message);
+    }
+}
+
+// ── Run all fetches on page load ─────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('%c🚀 ApartIn Admin — Fetch API Initialized', 'color:#14B8A6;font-size:13px;font-weight:bold;background:#0F172A;padding:4px 8px;border-radius:4px');
+
+    // Panggil semua sekarang
+    fetchAdminStats();
+    fetchAdminNotifications();
+    fetchAdminChart();
+
+    // Auto-refresh setiap 60 detik
+    setInterval(() => {
+        console.log('%c♻️ [API] Auto-refresh stats...', 'color:#64748B');
+        fetchAdminStats();
+        fetchAdminNotifications();
+    }, 60000);
+});
+</script>
+@endpush

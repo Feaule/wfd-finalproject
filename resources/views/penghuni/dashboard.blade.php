@@ -288,3 +288,144 @@
 
 @endif
 @endsection
+
+@push('scripts')
+<script>
+// ============================================================
+//  ApartIn — Penghuni Dashboard Fetch API
+//  Semua request ini dapat dilihat di:
+//  DevTools → Network → Fetch/XHR
+// ============================================================
+
+const PENGHUNI_API = {
+    stats:     '/api/penghuni/stats',
+    tagihan:   '/api/penghuni/tagihan',
+    pengaduan: '/api/penghuni/pengaduan',
+};
+
+const REQ_HEADERS = {
+    'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+};
+
+// ── 1. Fetch Stats Penghuni ───────────────────────────────────
+async function fetchPenghuniStats() {
+    try {
+        const res  = await fetch(PENGHUNI_API.stats, { headers: REQ_HEADERS });
+        const json = await res.json();
+
+        console.group('%c🏠 [API] Penghuni Stats', 'color:#14B8A6;font-weight:bold');
+        console.log('Status    :', json.status);
+        console.log('Timestamp :', json.timestamp);
+
+        if (json.data.has_unit) {
+            console.log('%cInfo Unit:', 'color:#94A3B8;font-weight:600');
+            console.table({
+                'Nomor Unit'  : json.data.unit.nomor,
+                'Lantai'      : json.data.unit.lantai,
+                'Tipe'        : json.data.unit.tipe,
+                'Luas'        : json.data.unit.luas + ' m²',
+                'Harga Sewa'  : json.data.unit.harga_formatted,
+                'Bergabung'   : json.data.penghuni.tanggal_masuk,
+                'Durasi'      : json.data.penghuni.durasi,
+            });
+            console.log('%cTagihan Summary:', 'color:#94A3B8;font-weight:600');
+            console.table({
+                'Total Tagihan'    : json.data.tagihan.total,
+                'Belum Bayar'      : json.data.tagihan.belum_bayar,
+                'Menunggu Verif'   : json.data.tagihan.menunggu,
+                'Lunas'            : json.data.tagihan.lunas,
+                'Total Tunggakan'  : 'Rp ' + Number(json.data.tagihan.total_tunggakan).toLocaleString('id-ID'),
+            });
+            console.log('%cPengaduan Summary:', 'color:#94A3B8;font-weight:600');
+            console.table(json.data.pengaduan);
+        } else {
+            console.log('ℹ️ Penghuni belum memiliki unit aktif.');
+        }
+        console.groupEnd();
+
+    } catch (err) {
+        console.error('%c❌ [API] Penghuni Stats Error:', 'color:red', err.message);
+    }
+}
+
+// ── 2. Fetch Tagihan Penghuni ────────────────────────────────
+async function fetchPenghuniTagihan() {
+    try {
+        const res  = await fetch(PENGHUNI_API.tagihan, { headers: REQ_HEADERS });
+        const json = await res.json();
+
+        console.group('%c🧾 [API] Penghuni Tagihan', 'color:#F43F5E;font-weight:bold');
+        console.log('Status    :', json.status);
+        console.log('Total     :', json.total, 'tagihan');
+        console.log('Timestamp :', json.timestamp);
+
+        if (json.data.length > 0) {
+            const tableRows = {};
+            json.data.forEach((t, i) => {
+                tableRows[`#${i+1}`] = {
+                    'Jenis'       : t.jenis,
+                    'Bulan'       : t.bulan_label,
+                    'Jumlah'      : t.jumlah_formatted,
+                    'Status'      : t.status,
+                    'Jatuh Tempo' : t.jatuh_tempo ?? '-',
+                    'Terlambat'   : t.is_overdue ? '⚠️ Ya' : '✅ Tidak',
+                };
+            });
+            console.table(tableRows);
+        } else {
+            console.log('✅ Tidak ada tagihan.');
+        }
+        console.groupEnd();
+
+    } catch (err) {
+        console.error('%c❌ [API] Tagihan Error:', 'color:red', err.message);
+    }
+}
+
+// ── 3. Fetch Pengaduan Penghuni ──────────────────────────────
+async function fetchPenghuniPengaduan() {
+    try {
+        const res  = await fetch(PENGHUNI_API.pengaduan, { headers: REQ_HEADERS });
+        const json = await res.json();
+
+        console.group('%c📣 [API] Penghuni Pengaduan', 'color:#F59E0B;font-weight:bold');
+        console.log('Status    :', json.status);
+        console.log('Total     :', json.total, 'pengaduan');
+        console.log('Timestamp :', json.timestamp);
+
+        if (json.data.length > 0) {
+            console.table(json.data.map(p => ({
+                'Judul'   : p.judul,
+                'Status'  : p.status,
+                'Dibuat'  : p.created_at,
+                'Update'  : p.updated_at,
+            })));
+        } else {
+            console.log('✅ Belum ada pengaduan.');
+        }
+        console.groupEnd();
+
+    } catch (err) {
+        console.error('%c❌ [API] Pengaduan Error:', 'color:red', err.message);
+    }
+}
+
+// ── Run all fetches on page load ─────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('%c🚀 ApartIn Penghuni — Fetch API Initialized', 'color:#14B8A6;font-size:13px;font-weight:bold;background:#0F172A;padding:4px 8px;border-radius:4px');
+
+    // Panggil semua saat halaman dimuat
+    fetchPenghuniStats();
+    fetchPenghuniTagihan();
+    fetchPenghuniPengaduan();
+
+    // Auto-refresh tagihan setiap 30 detik
+    setInterval(() => {
+        console.log('%c♻️ [API] Refresh tagihan...', 'color:#64748B');
+        fetchPenghuniTagihan();
+    }, 30000);
+});
+</script>
+@endpush

@@ -101,3 +101,23 @@ Route::prefix('penghuni')->middleware(['auth', 'role:penghuni'])->name('penghuni
          ->only(['index', 'create', 'store', 'show', 'destroy']);
 });
 
+
+// API Admin
+Route::prefix('api/admin')
+    ->middleware(['auth', 'role:admin'])
+    ->name('api.admin.')
+    ->group(function () {
+        Route::get('stats',         [\App\Http\Controllers\Api\AdminApiController::class, 'stats'])->name('stats');
+        Route::get('notifications', [\App\Http\Controllers\Api\AdminApiController::class, 'notifications'])->name('notifications');
+        Route::get('chart',         [\App\Http\Controllers\Api\AdminApiController::class, 'chart'])->name('chart');
+    });
+
+// API Penghuni
+Route::prefix('api/penghuni')
+    ->middleware(['auth', 'role:penghuni'])
+    ->name('api.penghuni.')
+    ->group(function () {
+        Route::get('stats',     [\App\Http\Controllers\Api\PenghuniApiController::class, 'stats'])->name('stats');
+        Route::get('tagihan',   [\App\Http\Controllers\Api\PenghuniApiController::class, 'tagihan'])->name('tagihan');
+        Route::get('pengaduan', [\App\Http\Controllers\Api\PenghuniApiController::class, 'pengaduan'])->name('pengaduan');
+    });
